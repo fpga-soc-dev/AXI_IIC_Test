@@ -32,3 +32,5 @@ Note: default wks image's partitions are high(2G, 4G), you can change to 100M, 3
 ```bash
 petalinux-package wic --wks build/rootfs.wks
 ```
+
+Write generated .wic image(under `linux/images` folder) using tools such as Balana Etcher.
