@@ -1,0 +1,71 @@
+header:
+  version: 8
+
+machine: pynq-z1
+
+distro: nodistro
+
+target: image-pynq-z1
+
+repos:
+  bitbake:
+    url: "https://git.openembedded.org/bitbake"
+    refspec: 2024-04.12-scarthgap
+    layers:
+      .: excluded
+
+  poky:
+    url: https://git.yoctoproject.org/poky
+    branch: scarthgap
+    layers:
+      meta:
+      meta-poky:
+
+  meta-openembedded:
+    url: http://git.openembedded.org/meta-openembedded
+    branch: scarthgap
+    layers:
+      meta-oe:
+
+  meta-xilinx:
+    url: "https://git.yoctoproject.org/meta-xilinx"
+    branch: scarthgap
+    layers:
+      meta-xilinx-core:
+      meta-xilinx-standalone:
+
+  meta-xilinx-tools:
+    url: "https://git.yoctoproject.org/meta-xilinx-tools"
+    branch: scarthgap
+
+  meta-arm:
+    url: "https://git.yoctoproject.org/meta-arm"
+    branch: scarthgap
+    layers:
+      meta-arm:
+      meta-arm-toolchain:
+
+  meta-user:
+    layers:
+      yocto/meta-user:
+
+local_conf_header:
+  meta-user: |
+    PACKAGE_CLASSES ?= "package_ipk" 
+    PATCHRESOLVE = "noop" 
+    EXTRA_IMAGE_FEATURES:append = " debug-tweaks" 
+    EXTRA_IMAGE_FEATURES:append = " empty-root-password"
+    hostname:pn-base-files = "pynq-z1" 
+    require conf/distro/include/no-static-libs.inc 
+    require conf/distro/include/yocto-uninative.inc 
+    require conf/distro/include/security_flags.inc 
+    INHERIT:append = " uninative" 
+    DISTRO_FEATURES:append = " largefile systemd usrmerge" 
+    VIRTUAL-RUNTIME_init_manager = "systemd" 
+    LICENSE_FLAGS_ACCEPTED:append = " xilinx"
+    XILINX_WITH_ESW = "xsct"
+    IMAGE_FSTYPES:append = " wic"
+    IMAGE_FSTYPES:remove = " wic.qemu-sd"
+    WKS_FILES = "sdimage-zynq.wks"
+    DL_DIR = "${TOPDIR}/../../../../../Yocto/downloads_scarthgap"
+    SSTATE_DIR = "${TOPDIR}/../../../../../Yocto/sstate_cache_scarthgap"
